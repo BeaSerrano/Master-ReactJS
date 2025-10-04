@@ -1,11 +1,10 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { AuthService } from "../../services/auth.service"
-import { authStore } from "../../utils/authStore"
-import { storage } from "../../utils/storage"
+import { useAuth } from "../../contexts/AuthContext"
 
 export const Login = () => {
     const navigate = useNavigate()
+    const { login } = useAuth()
     const [form, setForm] = useState({ email:'', password:'' })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -16,40 +15,25 @@ export const Login = () => {
 
     // función que envía el formulario
     const onSubmit = async (e) => {
-        e.preventDefault() // evita la recarga después del submit
-        setError(null) // limpiamos los mensajes de error y de ok
+        e.preventDefault()
+        setError(null) 
         setOk(null)
-
-        setLoading(true) // empieza la llamada a la API
+        setLoading(true)
 
         try {
-            // llamamos a la función login de la API
-            const data = await AuthService.login({ 
-                email: form.email.trim().toLowerCase(), 
-                password: form.password 
-            })
-            // comprobamos si hay token generado
-            const token = data.token ?? data?.data?.token;
-            // comprobar si hay un usuario
-            const user  = data.user ?? data?.data?.user ?? data?.data;
-            // gestiono el error si no hay toke generado
-            if(!token) throw new Error('El backend no devolvió token')
-            // si hay token, lo guardo en el localStorage
-            authStore.set(token)
-            // además, guardo el user con su clave user en el localStorage
-            storage.set('user', user ?? null)
-            // una vez terminado el login, llevo al usuario hasta la ruta /profile
+            // llamamos a la función login del contexto
+            await login(form.email.trim().toLowerCase(), form.password)
             navigate('/profile')
         } catch (err) {
             setError(err.message || 'Error al iniciar sesión 💀')
         } finally {
-            setLoading(false) // termina el proceso de llamada a la API
+            setLoading(false)
         }
     }
 
     return (
         <section className="card">
-            <h2>INICIAR SESIÓN</h2>
+            <h2>INICIAR SESIÓN CON CONTEXTO</h2>
             <form className="space-y" onSubmit={onSubmit}>
                 <div className="field">
                     <label>Email</label>

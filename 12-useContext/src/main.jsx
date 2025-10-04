@@ -4,16 +4,12 @@ import { createBrowserRouter, RouterProvider, NavLink, Outlet, redirect } from '
 import './index.css'
 import { Home } from './components'
 import { Register, Login, Profile } from './pages'
-import { authStore } from './utils/authStore'
+import { storage } from './utils/storage'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 // layout general
 const Layout = () => {
-  const hasToken = !!authStore.get() // comprobamos si hay token en el localStorage
-
-  const logout = () => { // cerrar sesión del usuario
-    authStore.clear()
-    location.href='/'
-  }
+  const { token, logout } = useAuth()
 
   return (
     <div>
@@ -22,11 +18,11 @@ const Layout = () => {
         <div>
           <NavLink to='/'>·Inicio·</NavLink>
           <NavLink to='/register'>·Registro·</NavLink>
-          { !hasToken ?  
+          { !token ?  
             <NavLink to='/login'>·Login·</NavLink> 
             : <> 
                 <NavLink to='/profile'>·Profile·</NavLink> 
-                <button onClick={logout}>Logout</button>
+                <button onClick={logout}>·Logout·</button>
               </>
           }
         </div>
@@ -40,8 +36,9 @@ const Layout = () => {
 
 // autenticación con redirect -- si no está autenticado, redirige al login
 const requireAuth = () => {
-  if(!authStore.get()) throw new redirect('/login');
-  return null
+  const tokenAuth = storage.get('token');
+  if(!tokenAuth) throw redirect('/login');
+  return null;
 }
 
 // rutas
@@ -61,9 +58,11 @@ const routes = [
 // enrutado o router
 const router = createBrowserRouter(routes)
 
-// inicio de renderizado de la aplicación
+// inicio de renderizado de la aplicación --- AQUÍ USAMOS EL CONTEXTO CON LOS ESTADOS GLOBALES!!!!!
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider> 
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )

@@ -20,6 +20,10 @@ El repositorio está organizado por carpetas que representan distintos temas o m
 ├── 08-useRef
 ├── 09-cssModule
 ├── 10-fetching-de-datos
+├── 11-servicios
+├── 12-useContext
+├── 13-Redux
+├── 14-ESLint
 
 
 Cada carpeta incluye ejercicios, ejemplos o prácticas relacionados con el tema correspondiente (componentes, hooks, props, routing, estilos, etc.).
@@ -42,3 +46,7 @@ Cada carpeta incluye ejercicios, ejemplos o prácticas relacionados con el tema 
 - React Router / enrutamiento
 - Estilos en React: CSS Modules u otros enfoques
 - Fetching de datos con CustomHooks
+- Servicios - Conectando con nuestra API (Register, Login, Profile)
+- Conexto con React (useContext)
+- Contexto con Redux
+- ESLint y Prettier - formateo y detección de problemas
