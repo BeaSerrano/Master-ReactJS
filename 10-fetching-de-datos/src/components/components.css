@@ -1,0 +1,22 @@
+.loading {
+    color: blue;
+    text-align: center;
+    font-weight: bold;
+}
+
+blockquote {
+    padding: 15px 20px;
+    background-color: aliceblue;
+    margin: 10px;
+}
+
+blockquote p {
+    font-size: 15px;
+    font-style: italic;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
